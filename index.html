@@ -3,13 +3,942 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Numbers-2 - Practice listening for English numbers</title>
+    <title>Numbers Learning Center</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Mobile landscape optimization -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, shrink-to-fit=no" />
+    
+    <style>
+        /* Force landscape orientation on mobile */
+        @media screen and (orientation: portrait) and (max-width: 800px) {
+            html {
+                transform: rotate(90deg);
+                transform-origin: left top;
+                width: 100vh;
+                height: 100vw;
+                overflow-x: hidden;
+                position: absolute;
+                top: 100%;
+                left: 0;
+            }
+        }
+
+        /* Prevent zoom on mobile */
+        * {
+            touch-action: manipulation;
+        }
+
+        /* Avatar positioning and styling */
+        .avatar-rachel {
+            position: absolute;
+            top: 96px;
+            left: 64px;
+            width: 256px;
+            height: 200px;
+            filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.6));
+            cursor: pointer;
+        }
+
+        .avatar-adam {
+            position: absolute;
+            top: 96px;
+            right: 64px;
+            width: 256px;
+            height: 200px;
+            filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.6));
+            cursor: pointer;
+        }
+
+        /* Avatar placeholders */
+        .avatar-placeholder {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .avatar-placeholder:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Mobile responsive avatars */
+        @media (max-width: 800px) and (orientation: landscape) {
+            .avatar-rachel, .avatar-adam {
+                width: 100px !important;
+                height: 80px !important;
+                top: 20px !important;
+                transform: none;
+            }
+            
+            .avatar-rachel {
+                left: 15px !important;
+            }
+            
+            .avatar-adam {
+                right: 15px !important;
+            }
+
+            .avatar-placeholder {
+                font-size: 14px;
+            }
+        }
+
+        /* Drop zone styling - similar to sentence app */
+        .drop-zone {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            min-width: 400px;
+            min-height: 120px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            filter: drop-shadow(0 15px 35px rgba(0, 0, 0, 0.3));
+            backdrop-filter: blur(10px);
+            border: 3px dashed rgba(59, 130, 246, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .drop-zone.has-number {
+            border: 3px solid rgba(16, 185, 129, 0.5);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .drop-zone-placeholder {
+            color: #9ca3af;
+            font-size: 24px;
+            font-weight: 600;
+            text-align: center;
+            font-style: italic;
+        }
+
+        /* Mobile responsive drop zone */
+        @media (max-width: 800px) and (orientation: landscape) {
+            .drop-zone {
+                min-width: 300px;
+                min-height: 80px;
+                padding: 20px;
+                top: 45%;
+            }
+            
+            .drop-zone-placeholder {
+                font-size: 18px;
+            }
+        }
+
+        /* Number bank styling */
+        .numbers-bank {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .number-tile {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+            border: none;
+            padding: 20px 30px;
+            border-radius: 15px;
+            font-size: 36px;
+            font-weight: 900;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.2));
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .number-tile:hover {
+            transform: translateY(-3px);
+            filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.3));
+        }
+
+        .number-tile:active {
+            transform: scale(0.95);
+        }
+
+        /* Mobile responsive number bank */
+        @media (max-width: 800px) and (orientation: landscape) {
+            .numbers-bank {
+                bottom: 30px;
+                gap: 12px;
+                padding: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+                max-width: 90%;
+            }
+            
+            .number-tile {
+                padding: 12px 20px;
+                font-size: 24px;
+                min-width: 60px;
+            }
+        }
+
+        /* Number in drop zone */
+        .dropped-number {
+            font-size: 72px;
+            font-weight: 900;
+            color: #1f2937;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            animation: numberPulse 2s infinite ease-in-out;
+        }
+
+        @media (max-width: 800px) and (orientation: landscape) {
+            .dropped-number {
+                font-size: 48px;
+            }
+        }
+
+        /* Control buttons */
+        .control-bar {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            z-index: 15;
+        }
+
+        .control-button {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+        }
+
+        .control-button:hover {
+            transform: translateY(-2px);
+            filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.3));
+        }
+
+        .voice-indicator {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .reset-button {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        }
+
+        /* Mobile control bar */
+        @media (max-width: 800px) and (orientation: landscape) {
+            .control-bar {
+                top: 15px;
+                gap: 8px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .control-button {
+                padding: 6px 12px;
+                font-size: 12px;
+                border-radius: 8px;
+            }
+            
+            .voice-indicator {
+                padding: 4px 8px;
+                font-size: 11px;
+            }
+        }
+
+        /* Progress indicators */
+        .progress-indicator {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 15px;
+            text-align: center;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+            z-index: 15;
+        }
+
+        .score-display {
+            font-size: 18px;
+            font-weight: 700;
+            color: #059669;
+            margin-bottom: 5px;
+        }
+
+        .level-display {
+            font-size: 14px;
+            color: #6b7280;
+            font-weight: 600;
+        }
+
+        /* Mobile progress positioning */
+        @media (max-width: 800px) and (orientation: landscape) {
+            .progress-indicator {
+                top: 15px;
+                right: 15px;
+                padding: 8px 12px;
+            }
+            
+            .score-display {
+                font-size: 14px;
+                margin-bottom: 3px;
+            }
+            
+            .level-display {
+                font-size: 11px;
+            }
+        }
+
+        /* Mode selector */
+        .mode-selector {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 15;
+        }
+
+        .mode-button {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .mode-button.active {
+            background: rgba(255, 255, 255, 0.9);
+            color: #1f2937;
+            border-color: rgba(255, 255, 255, 0.9);
+        }
+
+        @media (max-width: 800px) and (orientation: landscape) {
+            .mode-selector {
+                bottom: 10px;
+                left: 10px;
+                gap: 6px;
+            }
+            
+            .mode-button {
+                padding: 4px 8px;
+                font-size: 11px;
+                border-radius: 15px;
+            }
+        }
+
+        /* Animations */
+        @keyframes numberPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes flyToDropZone {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes correctAnswer {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes incorrectShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        @keyframes kickOut {
+            0% { transform: scale(1); }
+            25% { transform: scale(1.1) rotate(5deg); }
+            50% { transform: scale(0.9) rotate(-5deg); }
+            75% { transform: scale(1.1) rotate(3deg); }
+            100% { transform: scale(1) rotate(0deg); opacity: 0; }
+        }
+
+        /* Animation classes */
+        .flying {
+            animation: flyToDropZone 0.6s ease;
+        }
+
+        .correct {
+            animation: correctAnswer 0.8s ease;
+        }
+
+        .incorrect {
+            animation: incorrectShake 0.6s ease;
+        }
+
+        .kicked-out {
+            animation: kickOut 0.8s ease forwards;
+        }
+
+        /* Celebration overlay */
+        .celebration-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .celebration-content {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            filter: drop-shadow(0 15px 35px rgba(0, 0, 0, 0.5));
+            max-width: 90vw;
+            max-height: 90vh;
+        }
+
+        .celebration-number {
+            font-size: 120px;
+            font-weight: 900;
+            margin-bottom: 20px;
+        }
+
+        .celebration-word {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        /* Mobile celebration adjustments */
+        @media (max-width: 800px) and (orientation: landscape) {
+            .celebration-content {
+                padding: 25px;
+                margin: 20px;
+            }
+            
+            .celebration-number {
+                font-size: 80px;
+                margin-bottom: 15px;
+            }
+            
+            .celebration-word {
+                font-size: 32px;
+                margin-bottom: 15px;
+            }
+        }
+
+        /* Background gradient - full viewport */
+        .app-background {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            width: 100vw;
+            position: fixed;
+            top: 0;
+            left: 0;
+            overflow: hidden;
+        }
+
+        /* Remove default margins and ensure full coverage */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+        }
+
+        /* Fireworks for celebration */
+        .fireworks-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        .firework {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: fireworkExplosion 2s ease-out forwards;
+        }
+
+        @keyframes fireworkExplosion {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(2);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+    </style>
 </head>
-<body>
-    <h1>Numbers-2</h1>
-    <p>Practice listening for English numbers</p>
-    
-    <!-- Your audio and content will go here -->
-    
+
+<body class="app-background">
+    <!-- Control Bar -->
+    <div class="control-bar">
+        <button class="control-button" id="prevBtn">← Previous</button>
+        <div class="voice-indicator" id="voiceIndicator">🎭 Adam</div>
+        <button class="control-button" id="nextBtn">Next →</button>
+        <button class="control-button" id="randomBtn">🎲 Random</button>
+        <button class="control-button reset-button" id="resetBtn">🔄 Reset</button>
+    </div>
+
+    <!-- Progress Indicator -->
+    <div class="progress-indicator">
+        <div class="score-display" id="scoreDisplay">Score: 0</div>
+        <div class="level-display" id="levelDisplay">Numbers 0-10</div>
+    </div>
+
+    <!-- Rachel Avatar (Left) -->
+    <div class="avatar-rachel avatar-placeholder" id="rachelAvatar">
+        <span>🎤 Rachel</span>
+    </div>
+
+    <!-- Adam Avatar (Right) -->  
+    <div class="avatar-adam avatar-placeholder" id="adamAvatar">
+        <span>🎤 Adam</span>
+    </div>
+
+    <!-- Drop Zone -->
+    <div class="drop-zone" id="dropZone">
+        <div class="drop-zone-placeholder" id="dropZonePlaceholder">
+            Click a number to hear it spoken!
+        </div>
+    </div>
+
+    <!-- Numbers Bank -->
+    <div class="numbers-bank" id="numbersBank">
+        <!-- Number tiles will be generated here -->
+    </div>
+
+    <!-- Mode Selector -->
+    <div class="mode-selector">
+        <button class="mode-button active" id="basicMode">Basic (0-10)</button>
+        <button class="mode-button" id="advancedMode">Advanced (0-20)</button>
+    </div>
+
+    <!-- Celebration Overlay -->
+    <div class="celebration-overlay" id="celebrationOverlay">
+        <div class="celebration-content">
+            <div class="celebration-number" id="celebrationNumber">5</div>
+            <div class="celebration-word" id="celebrationWord">FIVE!</div>
+            <button class="control-button" style="margin-top: 15px; padding: 10px 20px; font-size: 16px;" id="continueBtn">Continue Learning</button>
+        </div>
+    </div>
+
+    <!-- Fireworks Container -->
+    <div class="fireworks-container" id="fireworksContainer"></div>
+
+    <!-- Audio elements -->
+    <audio id="adamAudio"></audio>
+    <audio id="rachelAudio"></audio>
+
+    <script>
+        // Number data
+        const numbers = {
+            0: 'zero', 1: 'one', 2: 'two', 3: 'three', 4: 'four', 
+            5: 'five', 6: 'six', 7: 'seven', 8: 'eight', 9: 'nine', 10: 'ten',
+            11: 'eleven', 12: 'twelve', 13: 'thirteen', 14: 'fourteen', 15: 'fifteen',
+            16: 'sixteen', 17: 'seventeen', 18: 'eighteen', 19: 'nineteen', 20: 'twenty'
+        };
+
+        // Game state
+        let currentNumber = null;
+        let currentVoice = 'adam';
+        let score = 0;
+        let currentMode = 'basic';
+        let usedNumbers = [];
+        let droppedNumber = null;
+
+        // DOM elements
+        const dropZone = document.getElementById('dropZone');
+        const dropZonePlaceholder = document.getElementById('dropZonePlaceholder');
+        const numbersBank = document.getElementById('numbersBank');
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        const levelDisplay = document.getElementById('levelDisplay');
+        const voiceIndicator = document.getElementById('voiceIndicator');
+        const celebrationOverlay = document.getElementById('celebrationOverlay');
+        const celebrationNumber = document.getElementById('celebrationNumber');
+        const celebrationWord = document.getElementById('celebrationWord');
+        const fireworksContainer = document.getElementById('fireworksContainer');
+
+        // Audio setup
+        let audioUnlocked = false;
+
+        function unlockAudio() {
+            if (!audioUnlocked) {
+                audioUnlocked = true;
+                console.log('Audio unlocked for mobile');
+            }
+        }
+
+        // Speak number function
+        function speakNumber(number) {
+            unlockAudio();
+            
+            const audioFile = `Audio/${currentVoice}/${currentVoice}_${number}.mp3`;
+            const audio = document.getElementById(`${currentVoice}Audio`);
+            audio.src = audioFile;
+            
+            audio.play().catch(error => {
+                console.log('Audio file not found, using speech synthesis');
+                const utterance = new SpeechSynthesisUtterance(numbers[number]);
+                utterance.rate = 0.7;
+                utterance.pitch = 1.0;
+                speechSynthesis.speak(utterance);
+            });
+        }
+
+        // Get number range based on mode
+        function getNumberRange() {
+            return currentMode === 'basic' ? 
+                Array.from({length: 11}, (_, i) => i) : 
+                Array.from({length: 21}, (_, i) => i);
+        }
+
+        // Generate random number for the question
+        function generateRandomNumber() {
+            const range = getNumberRange();
+            const available = range.filter(n => !usedNumbers.includes(n));
+            
+            if (available.length === 0) {
+                usedNumbers = [];
+                return range[Math.floor(Math.random() * range.length)];
+            }
+            
+            const randomNum = available[Math.floor(Math.random() * available.length)];
+            usedNumbers.push(randomNum);
+            
+            if (usedNumbers.length > 5) {
+                usedNumbers = usedNumbers.slice(-5);
+            }
+            
+            return randomNum;
+        }
+
+        // Generate options for number bank
+        function generateNumberOptions(correctNumber) {
+            const range = getNumberRange();
+            const options = [correctNumber];
+            
+            while (options.length < 4) {
+                const randomChoice = range[Math.floor(Math.random() * range.length)];
+                if (!options.includes(randomChoice)) {
+                    options.push(randomChoice);
+                }
+            }
+            
+            return options.sort(() => Math.random() - 0.5);
+        }
+
+        // Create number bank
+        function createNumberBank() {
+            numbersBank.innerHTML = '';
+            const options = generateNumberOptions(currentNumber);
+            
+            options.forEach(num => {
+                const tile = document.createElement('button');
+                tile.className = 'number-tile';
+                tile.textContent = num;
+                tile.addEventListener('click', () => handleNumberClick(num, tile));
+                numbersBank.appendChild(tile);
+            });
+        }
+
+        // Handle number tile click
+        function handleNumberClick(number, tile) {
+            if (droppedNumber !== null) return; // Already have a number in drop zone
+            
+            // Visual feedback
+            tile.classList.add('flying');
+            
+            // Move number to drop zone after animation
+            setTimeout(() => {
+                moveToDropZone(number, tile);
+            }, 300);
+        }
+
+        // Move number to drop zone
+        function moveToDropZone(number, originalTile) {
+            droppedNumber = number;
+            
+            // Update drop zone
+            dropZone.classList.add('has-number');
+            dropZonePlaceholder.innerHTML = `<div class="dropped-number">${number}</div>`;
+            
+            // Hide original tile
+            originalTile.style.visibility = 'hidden';
+            
+            // Check if correct after a brief delay
+            setTimeout(() => {
+                checkAnswer(number, originalTile);
+            }, 500);
+        }
+
+        // Check if answer is correct
+        function checkAnswer(selectedNumber, originalTile) {
+            const isCorrect = selectedNumber === currentNumber;
+            
+            if (isCorrect) {
+                handleCorrectAnswer();
+            } else {
+                handleIncorrectAnswer(originalTile);
+            }
+        }
+
+        // Handle correct answer
+        function handleCorrectAnswer() {
+            score += currentMode === 'basic' ? 1 : 2;
+            scoreDisplay.textContent = `Score: ${score}`;
+            
+            // Celebration animation
+            dropZonePlaceholder.querySelector('.dropped-number').classList.add('correct');
+            
+            // Create fireworks
+            createFireworks();
+            
+            // Show celebration overlay after delay
+            setTimeout(() => {
+                showCelebration();
+            }, 1500);
+        }
+
+        // Handle incorrect answer
+        function handleIncorrectAnswer(originalTile) {
+            // Shake the drop zone
+            dropZone.classList.add('incorrect');
+            
+            setTimeout(() => {
+                // Kick out the number
+                const droppedNumberEl = dropZonePlaceholder.querySelector('.dropped-number');
+                if (droppedNumberEl) {
+                    droppedNumberEl.classList.add('kicked-out');
+                }
+                
+                setTimeout(() => {
+                    // Reset drop zone
+                    resetDropZone();
+                    
+                    // Show original tile again
+                    originalTile.style.visibility = 'visible';
+                    originalTile.classList.remove('flying');
+                    
+                    // Remove shake class
+                    dropZone.classList.remove('incorrect');
+                }, 800);
+            }, 600);
+        }
+
+        // Reset drop zone
+        function resetDropZone() {
+            droppedNumber = null;
+            dropZone.classList.remove('has-number');
+            dropZonePlaceholder.innerHTML = 'Try again! Click the correct number.';
+        }
+
+        // Create fireworks effect
+        function createFireworks() {
+            const colors = ['#FFD700', '#FF6B47', '#4ECDC4', '#45B7D1', '#FF69B4'];
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+            
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const firework = document.createElement('div');
+                    firework.className = 'firework';
+                    firework.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    
+                    const angle = (Math.PI * 2 * i) / 20;
+                    const distance = 100 + Math.random() * 100;
+                    
+                    firework.style.left = centerX + Math.cos(angle) * distance + 'px';
+                    firework.style.top = centerY + Math.sin(angle) * distance + 'px';
+                    
+                    fireworksContainer.appendChild(firework);
+                    
+                    setTimeout(() => {
+                        if (firework.parentNode) {
+                            firework.parentNode.removeChild(firework);
+                        }
+                    }, 2000);
+                }, i * 50);
+            }
+        }
+
+        // Show celebration overlay
+        function showCelebration() {
+            celebrationNumber.textContent = currentNumber;
+            celebrationWord.textContent = numbers[currentNumber].toUpperCase() + '!';
+            celebrationOverlay.style.display = 'flex';
+            
+            // Auto-play the correct number
+            speakNumber(currentNumber);
+        }
+
+        // Hide celebration and start next question
+        function hideCelebration() {
+            celebrationOverlay.style.display = 'none';
+            startNewQuestion();
+        }
+
+        // Start new question
+        function startNewQuestion() {
+            currentNumber = generateRandomNumber();
+            resetDropZone();
+            createNumberBank();
+            
+            // Update drop zone placeholder
+            dropZonePlaceholder.innerHTML = `Listen! What number do you hear?`;
+            
+            // Auto-play the number after a delay
+            setTimeout(() => {
+                speakNumber(currentNumber);
+            }, 1000);
+        }
+
+        // Switch voice
+        function switchVoice() {
+            currentVoice = currentVoice === 'adam' ? 'rachel' : 'adam';
+            voiceIndicator.textContent = `🎭 ${currentVoice === 'adam' ? 'Adam' : 'Rachel'}`;
+        }
+
+        // Switch mode
+        function switchMode(mode) {
+            currentMode = mode;
+            usedNumbers = [];
+            
+            document.getElementById('basicMode').classList.toggle('active', mode === 'basic');
+            document.getElementById('advancedMode').classList.toggle('active', mode === 'advanced');
+            
+            levelDisplay.textContent = `Numbers ${mode === 'basic' ? '0-10' : '0-20'}`;
+            
+            startNewQuestion();
+        }
+
+        // Reset current question
+        function resetQuestion() {
+            resetDropZone();
+            createNumberBank();
+            dropZonePlaceholder.innerHTML = `Listen! What number do you hear?`;
+            
+            setTimeout(() => {
+                speakNumber(currentNumber);
+            }, 500);
+        }
+
+        // Event listeners
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            const range = getNumberRange();
+            const currentIndex = range.indexOf(currentNumber);
+            if (currentIndex > 0) {
+                currentNumber = range[currentIndex - 1];
+                resetQuestion();
+            }
+        });
+
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            const range = getNumberRange();
+            const currentIndex = range.indexOf(currentNumber);
+            if (currentIndex < range.length - 1) {
+                currentNumber = range[currentIndex + 1];
+                resetQuestion();
+            }
+        });
+
+        document.getElementById('randomBtn').addEventListener('click', startNewQuestion);
+        document.getElementById('resetBtn').addEventListener('click', resetQuestion);
+        document.getElementById('continueBtn').addEventListener('click', hideCelebration);
+
+        document.getElementById('basicMode').addEventListener('click', () => switchMode('basic'));
+        document.getElementById('advancedMode').addEventListener('click', () => switchMode('advanced'));
+
+        // Avatar click handlers
+        document.getElementById('rachelAvatar').addEventListener('click', () => {
+            currentVoice = 'rachel';
+            voiceIndicator.textContent = '🎭 Rachel';
+            if (currentNumber !== null) speakNumber(currentNumber);
+        });
+
+        document.getElementById('adamAvatar').addEventListener('click', () => {
+            currentVoice = 'adam';
+            voiceIndicator.textContent = '🎭 Adam';
+            if (currentNumber !== null) speakNumber(currentNumber);
+        });
+
+        // Voice indicator click
+        voiceIndicator.addEventListener('click', switchVoice);
+
+        // Touch events for mobile audio unlock
+        document.addEventListener('touchstart', unlockAudio, { once: true });
+        document.addEventListener('click', unlockAudio, { once: true });
+
+        // Initialize the app
+        startNewQuestion();
+        console.log('Numbers Learning App initialized');
+    </script>
 </body>
-</html>
+</html>12
