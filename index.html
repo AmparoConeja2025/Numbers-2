@@ -1,17 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Numbers Learning Center</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Unscramble Learning Center</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Mobile landscape optimization -->
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, shrink-to-fit=no" />
-    
-    <style>
-        /* Force landscape orientation on mobile */
-        @media screen and (orientation: portrait) and (max-width: 800px) {
+<style>
+  /* FORCE LANDSCAPE ORIENTATION */
+  @media screen and (orientation: portrait) {
+    html {
+      transform: rotate(90deg);
+      transform-origin: left top;
+      width: 100vh;
+      height: 100vw;
+      overflow-x: hidden;
+      position: absolute;
+      top: 100%;
+      left: -10px;
+      right: -10px;
+    }
+  }
+
+</style>
+  </head>
+
+  <body class="bg-gray-700 min-h-screen relative">
+
+<style>>
+        /* Force landscape orientation - exact copy from working app */
+        @media screen and (orientation: portrait) {
             html {
                 transform: rotate(90deg);
                 transform-origin: left top;
@@ -20,7 +39,20 @@
                 overflow-x: hidden;
                 position: absolute;
                 top: 100%;
-                left: 0;
+                left: -10px;
+                right: -10px;
+            }
+        }
+
+        /* Additional mobile coverage */
+        @media (max-width: 800px) {
+            .app-background {
+                width: 100vw;
+                height: 100vh;
+                left: -10px;
+                top: -10px;
+                right: -10px;
+                bottom: -10px;
             }
         }
 
@@ -35,68 +67,44 @@
             top: 96px;
             left: 64px;
             width: 256px;
-            height: 200px;
+            height: auto;
             filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.6));
             cursor: pointer;
         }
 
         .avatar-adam {
             position: absolute;
-            top: 96px;
+            top: 88px;
             right: 64px;
-            width: 256px;
-            height: 200px;
+            width: 280px;
+            height: auto;
             filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.6));
             cursor: pointer;
         }
 
-        /* Avatar placeholders */
-        .avatar-placeholder {
-            background: rgba(255, 255, 255, 0.2);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            font-weight: 600;
-            color: white;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-        }
-
-        .avatar-placeholder:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
-        }
-
-        /* Mobile responsive avatars */
+        /* Mobile responsive avatars - independent positioning */
         @media (max-width: 800px) and (orientation: landscape) {
-            .avatar-rachel, .avatar-adam {
-                width: 100px !important;
-                height: 80px !important;
-                top: 20px !important;
+            .avatar-rachel {
+                width: 110px !important;
+                height: auto !important;
+                top: 25px !important;
+                left: 15px !important;
                 transform: none;
             }
             
-            .avatar-rachel {
-                left: 15px !important;
-            }
-            
             .avatar-adam {
+                width: 125px !important;
+                height: auto !important;
+                top: 20px !important;
                 right: 15px !important;
-            }
-
-            .avatar-placeholder {
-                font-size: 14px;
+                transform: none;
             }
         }
 
-        /* Drop zone styling - similar to sentence app */
+        /* Drop zone styling - moved higher */
         .drop-zone {
             position: absolute;
-            top: 50%;
+            top: 25%;
             left: 50%;
             transform: translate(-50%, -50%);
             min-width: 400px;
@@ -132,7 +140,7 @@
                 min-width: 300px;
                 min-height: 80px;
                 padding: 20px;
-                top: 45%;
+                top: 35%;
             }
             
             .drop-zone-placeholder {
@@ -140,10 +148,10 @@
             }
         }
 
-        /* Number bank styling */
+        /* Number bank styling - moved higher */
         .numbers-bank {
             position: absolute;
-            bottom: 60px;
+            bottom: 120px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
@@ -181,7 +189,7 @@
         /* Mobile responsive number bank */
         @media (max-width: 800px) and (orientation: landscape) {
             .numbers-bank {
-                bottom: 30px;
+                bottom: 80px;
                 gap: 12px;
                 padding: 15px;
                 flex-wrap: wrap;
@@ -211,119 +219,19 @@
             }
         }
 
-        /* Control buttons */
-        .control-bar {
+        /* Control styles removed - no longer needed */
+
+        /* Progress indicators - hidden for now to avoid avatar overlap */
+        .progress-indicator {
+            display: none;
+        }
+
+        /* Mode selector - moved higher and visible */
+        .mode-selector {
             position: absolute;
             top: 20px;
             left: 50%;
             transform: translateX(-50%);
-            display: flex;
-            gap: 15px;
-            align-items: center;
-            z-index: 15;
-        }
-
-        .control-button {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
-        }
-
-        .control-button:hover {
-            transform: translateY(-2px);
-            filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.3));
-        }
-
-        .voice-indicator {
-            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-        }
-
-        .reset-button {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-        }
-
-        /* Mobile control bar */
-        @media (max-width: 800px) and (orientation: landscape) {
-            .control-bar {
-                top: 15px;
-                gap: 8px;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            
-            .control-button {
-                padding: 6px 12px;
-                font-size: 12px;
-                border-radius: 8px;
-            }
-            
-            .voice-indicator {
-                padding: 4px 8px;
-                font-size: 11px;
-            }
-        }
-
-        /* Progress indicators */
-        .progress-indicator {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 15px;
-            border-radius: 15px;
-            text-align: center;
-            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
-            z-index: 15;
-        }
-
-        .score-display {
-            font-size: 18px;
-            font-weight: 700;
-            color: #059669;
-            margin-bottom: 5px;
-        }
-
-        .level-display {
-            font-size: 14px;
-            color: #6b7280;
-            font-weight: 600;
-        }
-
-        /* Mobile progress positioning */
-        @media (max-width: 800px) and (orientation: landscape) {
-            .progress-indicator {
-                top: 15px;
-                right: 15px;
-                padding: 8px 12px;
-            }
-            
-            .score-display {
-                font-size: 14px;
-                margin-bottom: 3px;
-            }
-            
-            .level-display {
-                font-size: 11px;
-            }
-        }
-
-        /* Mode selector */
-        .mode-selector {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
             display: flex;
             gap: 10px;
             z-index: 15;
@@ -349,8 +257,7 @@
 
         @media (max-width: 800px) and (orientation: landscape) {
             .mode-selector {
-                bottom: 10px;
-                left: 10px;
+                top: 15px;
                 gap: 6px;
             }
             
@@ -475,7 +382,7 @@
             }
         }
 
-        /* Background gradient - full viewport */
+        /* Background gradient - full viewport with explicit positioning */
         .app-background {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
@@ -483,6 +390,8 @@
             position: fixed;
             top: 0;
             left: 0;
+            right: 0;
+            bottom: 0;
             overflow: hidden;
         }
 
@@ -499,6 +408,12 @@
             width: 100%;
             height: 100%;
             overflow-x: hidden;
+        }
+
+        /* Webkit specific fixes for mobile Safari */
+        html {
+            -webkit-text-size-adjust: 100%;
+            -webkit-touch-callout: none;
         }
 
         /* Fireworks for celebration */
@@ -538,14 +453,7 @@
 </head>
 
 <body class="app-background">
-    <!-- Control Bar -->
-    <div class="control-bar">
-        <button class="control-button" id="prevBtn">← Previous</button>
-        <div class="voice-indicator" id="voiceIndicator">🎭 Adam</div>
-        <button class="control-button" id="nextBtn">Next →</button>
-        <button class="control-button" id="randomBtn">🎲 Random</button>
-        <button class="control-button reset-button" id="resetBtn">🔄 Reset</button>
-    </div>
+    <!-- Control buttons removed for cleaner mobile experience -->
 
     <!-- Progress Indicator -->
     <div class="progress-indicator">
@@ -553,15 +461,11 @@
         <div class="level-display" id="levelDisplay">Numbers 0-10</div>
     </div>
 
-    <!-- Rachel Avatar (Left) -->
-    <div class="avatar-rachel avatar-placeholder" id="rachelAvatar">
-        <span>🎤 Rachel</span>
-    </div>
+    <!-- Dianne Avatar (Left - Female) -->
+    <img src="Image/dianne.png" alt="Dianne" class="avatar-rachel" id="rachelAvatar" />
 
-    <!-- Adam Avatar (Right) -->  
-    <div class="avatar-adam avatar-placeholder" id="adamAvatar">
-        <span>🎤 Adam</span>
-    </div>
+    <!-- Harry Avatar (Right - Male) -->  
+    <img src="Image/harry.png" alt="Harry" class="avatar-adam" id="adamAvatar" />
 
     <!-- Drop Zone -->
     <div class="drop-zone" id="dropZone">
@@ -890,27 +794,7 @@
             }, 500);
         }
 
-        // Event listeners
-        document.getElementById('prevBtn').addEventListener('click', () => {
-            const range = getNumberRange();
-            const currentIndex = range.indexOf(currentNumber);
-            if (currentIndex > 0) {
-                currentNumber = range[currentIndex - 1];
-                resetQuestion();
-            }
-        });
-
-        document.getElementById('nextBtn').addEventListener('click', () => {
-            const range = getNumberRange();
-            const currentIndex = range.indexOf(currentNumber);
-            if (currentIndex < range.length - 1) {
-                currentNumber = range[currentIndex + 1];
-                resetQuestion();
-            }
-        });
-
-        document.getElementById('randomBtn').addEventListener('click', startNewQuestion);
-        document.getElementById('resetBtn').addEventListener('click', resetQuestion);
+        // Event listeners - cleaned up for removed controls
         document.getElementById('continueBtn').addEventListener('click', hideCelebration);
 
         document.getElementById('basicMode').addEventListener('click', () => switchMode('basic'));
@@ -919,18 +803,13 @@
         // Avatar click handlers
         document.getElementById('rachelAvatar').addEventListener('click', () => {
             currentVoice = 'rachel';
-            voiceIndicator.textContent = '🎭 Rachel';
             if (currentNumber !== null) speakNumber(currentNumber);
         });
 
         document.getElementById('adamAvatar').addEventListener('click', () => {
             currentVoice = 'adam';
-            voiceIndicator.textContent = '🎭 Adam';
             if (currentNumber !== null) speakNumber(currentNumber);
         });
-
-        // Voice indicator click
-        voiceIndicator.addEventListener('click', switchVoice);
 
         // Touch events for mobile audio unlock
         document.addEventListener('touchstart', unlockAudio, { once: true });
@@ -941,4 +820,4 @@
         console.log('Numbers Learning App initialized');
     </script>
 </body>
-</html>12
+</html>5
