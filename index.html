@@ -434,10 +434,10 @@
 <body class="bg-gray-600 min-h-screen relative">
 
     <!-- Dianne Avatar (Left - Female) -->
-    <img src="Image/dianne.png" alt="Dianne" class="avatar-rachel" id="rachelAvatar" />
+    <img src="images/dianne.png" alt="Dianne" class="avatar-rachel" id="rachelAvatar" />
 
     <!-- Harry Avatar (Right - Male) -->  
-    <img src="Image/harry.png" alt="Harry" class="avatar-adam" id="adamAvatar" />
+    <img src="image/harry.png" alt="Harry" class="avatar-adam" id="adamAvatar" />
 
     <!-- Continue Learning Buttons -->
     <button class="continue-button-left" id="continueButtonLeft">Continue</button>
@@ -508,7 +508,7 @@
         function speakNumber(number) {
             unlockAudio();
             
-            const audioFile = `Audio/${currentVoice}/${currentVoice}_${number}.mp3`;
+            const audioFile = `audio/${currentVoice}/${currentVoice}_${number}.mp3`;
             const audio = document.getElementById(`${currentVoice}Audio`);
             audio.src = audioFile;
             
